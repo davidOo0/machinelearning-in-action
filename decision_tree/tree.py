@@ -175,7 +175,34 @@ def creatplot (intree):
     plt.show()
 
 #***************************************************************************************
-mytree = retrievetree(0)
-creatplot(mytree)
-    
 
+
+def classify(inputtree,featlabel,testvec):
+    classlabel=''
+    firststr = list(inputtree.keys())[0]
+    seconddict = inputtree[firststr]
+    featindex = featlabel.index(firststr)
+    for key in seconddict.keys():
+        if testvec[featindex] == key:
+            if type(seconddict[key]).__name__=='dict':
+                classlabel = classify(seconddict[key],featlabel,testvec)
+            else:
+                classlabel = seconddict[key]
+    return classlabel
+##*********************************************************************
+#将学习好的树存下来
+#*********************************************************************
+def storetree(inputtree,filename):
+    import pickle
+    fw = open(filename,'w')
+    pickle.dumps(inputtree,fw)
+    fww.close()
+def grabtree (filename):
+    import pickle
+    fr = open(filename)
+    return pickle.load(fr)
+fr=open('C:\\Users\\WZF\\Desktop\\test\\机器学习实战\\决策树\\lenses.txt')   
+lenses = [inst.strip().split('\t') for inst in fr.readlines()] 
+lenseslabels=['ages','prescript','astigmatic','tearrate']
+lensestree = creattree(lenses,lenseslabels)
+creatplot(lensestree)
